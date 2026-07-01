@@ -34,14 +34,14 @@
         echo n | /root/install.sh email={{ email }} kernel=kvm noos=true
       when: not proxmox_check.stat.exists
 
-    - name: Downloading bridge script
-      get_url: 
-        url: https://raw.githubusercontent.com/zod01/bridge/refs/heads/main/bridge.sh
-        dest: /tmp/bridge.sh
-        mode: '777'
-      when: not proxmox_check.stat.exists
+    #- name: Downloading bridge script
+     # get_url: 
+      #  url: https://raw.githubusercontent.com/zod01/bridge/refs/heads/main/bridge.sh
+       # dest: /tmp/bridge.sh
+       # mode: '777'
+      #when: not proxmox_check.stat.exists
 
-    - name: Creating bridge 
-      shell: |
-        /tmp/bridge.sh
-      when: not proxmox_check.stat.exists
+    #- name: Creating bridge 
+     # shell: |
+      #  /tmp/bridge.sh
+      #when: not proxmox_check.stat.exists
