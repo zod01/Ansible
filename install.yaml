@@ -1,0 +1,47 @@
+---
+
+- name: installing virtualizor
+  hosts: all
+  become: yes
+
+
+  vars_prompt:
+    - name: email
+      prompt: "Enter email"
+      private: no
+
+
+  tasks:
+    - name: Downloading install.sh at root's home
+      get_url: 
+        url: http://files.virtualizor.com/install.sh
+        dest: /root/install.sh
+        mode: '0755'
+
+    - name: Check if host os proxmox
+      stat:
+        path: /usr/bin/pveversion
+      register: proxmox_check
+
+    - name: Installing virtualizor on proxmox host
+      shell: |
+        echo n | /root/install.sh email={{ email }} kernel=proxmox noos=true
+      when: proxmox_check.stat.exists
+
+
+    - name: Running script
+      shell: |
+        echo n | /root/install.sh email={{ email }} kernel=kvm noos=true
+      when: not proxmox_check.stat.exists
+
+    - name: Downloading bridge script
+      get_url: 
+        url: https://raw.githubusercontent.com/zod01/bridge/refs/heads/main/bridge.sh
+        dest: /tmp/bridge.sh
+        mode: '777'
+      when: not proxmox_check.stat.exists
+
+    - name: Creating bridge 
+      shell: |
+        /tmp/bridge.sh
+      when: not proxmox_check.stat.exists
